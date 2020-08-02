@@ -52,6 +52,7 @@ extension Renderer: MTKViewDelegate {
         print("metalview size changed")
     }
     
+    //each frame draw
     func draw(in view: MTKView) {
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
             let texture = view.currentDrawable,
@@ -60,7 +61,7 @@ extension Renderer: MTKViewDelegate {
                 return
         }
         commandEncoder.setRenderPipelineState(pipelineState)
-        commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: 1)
+        commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: 3)
         commandEncoder.endEncoding()
         
         commandBuffer.present(texture)
