@@ -11,9 +11,9 @@ using namespace metal;
 
 //position: x, y, z, w
 constant float4 position[3] = {
-    float4(-1, -1, 0, 1),
-    float4(1, -0.5, 0.3, 1),
-    float4(0.5, 1, 1, 1)
+    float4(-0.5, -0.5, 1, 1),
+    float4(0.5, -0.5, 1, 1),
+    float4(0, 0.5, 1, 1)
 };
 
 //color rgb
@@ -29,9 +29,10 @@ struct VertexOut {
     float3 color;
 };
 
-vertex VertexOut vertex_main(uint vertexId [[vertex_id]]) {
+vertex VertexOut vertex_main(uint vertexId [[vertex_id]],
+                             constant float4x4 &modelMatrix [[buffer(21)]]) {
     VertexOut result {
-        .position = position[vertexId],
+        .position = modelMatrix * position[vertexId],
         .point_size = 60,
         .color = color[vertexId]
     };

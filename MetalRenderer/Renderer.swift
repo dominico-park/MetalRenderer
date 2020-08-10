@@ -61,7 +61,19 @@ extension Renderer: MTKViewDelegate {
                 return
         }
         commandEncoder.setRenderPipelineState(pipelineState)
-        commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
+        
+        var modelTransform = Transform()
+        modelTransform.position = [0.5, 0, 0]
+        modelTransform.rotation.z = radians(fromDegrees: 45)
+        modelTransform.scale = 0.5
+        var modelMatrix = modelTransform.matrix
+        commandEncoder.setVertexBytes(
+            &modelMatrix,
+            length: MemoryLayout<float4x4>.stride,
+            index: 21
+        )
+        
+        commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: 3)
         commandEncoder.endEncoding()
         
         commandBuffer.present(texture)
