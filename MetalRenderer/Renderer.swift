@@ -15,6 +15,26 @@ class Renderer: NSObject {
     static var library: MTLLibrary!
     let commandQueue: MTLCommandQueue
     let pipelineState: MTLRenderPipelineState
+    //position: x, y, z, w
+    let positionArr = [
+        float4(-0.5, -0.5, 1, 1),
+        float4(0.5, -0.5, 1, 1),
+        float4(0, 0.5, 1, 1),
+        float4(0.5, -0.5, 1, 1),
+        float4(0, 0.5, 1, 1),
+        float4(0.7, 0.7, 1, 1)
+    ]
+    //color rgb
+    let colorArr = [
+        float3(1, 0, 0),
+        float3(0, 1, 0),
+        float3(0, 0, 1),
+        float3(0, 1, 0),
+        float3(0, 0, 1),
+        float3(0.5, 0.5, 0.5)
+    ]
+    let positionBuffer: MTLBuffer
+    let colorBuffer: MTLBuffer
     
     init(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
@@ -25,6 +45,13 @@ class Renderer: NSObject {
         Renderer.library = device.makeDefaultLibrary()
         self.commandQueue = commandQueue
         self.pipelineState = Renderer.makePipelineState()
+        
+        //cpu 에서 vertex buffer를 만들기
+        let positionLength = MemoryLayout<float4>.stride * positionArr.count
+        positionBuffer = device.makeBuffer(bytes: positionArr, length: positionLength, options: [])!
+        let colorLength = MemoryLayout<float3>.stride * colorArr.count
+        colorBuffer = device.makeBuffer(bytes: colorArr, length: colorLength, options: [])!
+        
         super.init()
     }
     
@@ -61,6 +88,10 @@ extension Renderer: MTKViewDelegate {
                 return
         }
         commandEncoder.setRenderPipelineState(pipelineState)
+        
+        //vertex buffer 를 gpu 에 전달
+        commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
         
         var modelTransform = Transform()
         modelTransform.position = [0.5, 0, 0]
