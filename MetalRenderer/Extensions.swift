@@ -19,12 +19,23 @@ extension MTLVertexDescriptor {
         descriptor.attributes[0].bufferIndex = 0
         
         //color
-        descriptor.attributes[1].format = .float3
-        descriptor.attributes[1].offset = MemoryLayout<float3>.stride
-        descriptor.attributes[1].bufferIndex = 0
+//        descriptor.attributes[1].format = .float3
+//        descriptor.attributes[1].offset = MemoryLayout<float3>.stride
+//        descriptor.attributes[1].bufferIndex = 0
         
         //stride
-        descriptor.layouts[0].stride = MemoryLayout<Vertex>.stride
+        descriptor.layouts[0].stride = MemoryLayout<float3>.stride
+        
+        return descriptor
+    }
+}
+
+extension MDLVertexDescriptor {
+    static func defaultVertexDescriptor() -> MDLVertexDescriptor {
+        let descriptor = MTKModelIOVertexDescriptorFromMetal(.defaultVertexDescriptor())
+        
+        let attributePosition = descriptor.attributes[0] as! MDLVertexAttribute
+        attributePosition.name = MDLVertexAttributePosition
         
         return descriptor
     }
