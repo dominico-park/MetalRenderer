@@ -15,27 +15,20 @@ class Renderer: NSObject {
     static var library: MTLLibrary!
     let commandQueue: MTLCommandQueue
     let pipelineState: MTLRenderPipelineState
-    //position: x, y, z, w
-    let positionArr: [float3] = [
-        float3(-0.5, -0.5, 1),
-        float3(0.5, -0.5, 1),
-        float3(0, 0.5, 1),
-        float3(0.7, 0.7, 1)
-    ]
-    //color rgb
-    let colorArr = [
-        float3(1, 0, 0),
-        float3(0, 1, 0),
-        float3(0, 0, 1),
-        float3(0.5, 0.5, 0.5)
+    let vertices: [Vertex] = [
+        Vertex(position: float3(-0.5, -0.5, 1), color: float3(1, 0, 0)),
+        Vertex(position: float3(0.5, -0.5, 1), color: float3(0, 1, 0)),
+        Vertex(position: float3(0, 0.5, 1), color: float3(0, 0, 1)),
+        Vertex(position: float3(0.7, 0.7, 1), color: float3(0.5, 0.5, 0.5)),
     ]
     
     let indexArr: [UInt16] = [
         0, 1, 2,
         2, 1, 3
     ]
-    let positionBuffer: MTLBuffer
-    let colorBuffer: MTLBuffer
+    let vertexBuffer: MTLBuffer
+//    let positionBuffer: MTLBuffer
+//    let colorBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
     var timer: Float = 0
     
@@ -50,10 +43,9 @@ class Renderer: NSObject {
         self.pipelineState = Renderer.makePipelineState()
         
         //cpu 에서 vertex buffer를 만들기
-        let positionLength = MemoryLayout<float4>.stride * positionArr.count
-        positionBuffer = device.makeBuffer(bytes: positionArr, length: positionLength, options: [])!
-        let colorLength = MemoryLayout<float3>.stride * colorArr.count
-        colorBuffer = device.makeBuffer(bytes: colorArr, length: colorLength, options: [])!
+        let vertexLength = MemoryLayout<Vertex>.stride * vertices.count
+        vertexBuffer = device.makeBuffer(bytes: vertices, length: vertexLength, options: [])!
+        
         let indexLength = MemoryLayout<UInt16>.stride * indexArr.count
         indexBuffer = device.makeBuffer(bytes: indexArr, length: indexLength, options: [])!
         
@@ -100,8 +92,8 @@ extension Renderer: MTKViewDelegate {
         commandEncoder.setRenderPipelineState(pipelineState)
         
         //vertex buffer 를 gpu 에 전달
-        commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
+        commandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+
         commandEncoder.setVertexBytes(
             &currentTime,
             length: MemoryLayout<Float>.stride,

@@ -20,12 +20,11 @@ extension MTLVertexDescriptor {
         
         //color
         descriptor.attributes[1].format = .float3
-        descriptor.attributes[1].offset = 0
-        descriptor.attributes[1].bufferIndex = 1
+        descriptor.attributes[1].offset = MemoryLayout<float3>.stride
+        descriptor.attributes[1].bufferIndex = 0
         
         //stride
-        descriptor.layouts[0].stride = MemoryLayout<float3>.stride
-        descriptor.layouts[1].stride = MemoryLayout<float3>.stride
+        descriptor.layouts[0].stride = MemoryLayout<Vertex>.stride
         
         return descriptor
     }
