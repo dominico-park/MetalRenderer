@@ -10,17 +10,23 @@
 using namespace metal;
 
 //position: x, y, z, w
-constant float4 position[3] = {
+constant float4 position[6] = {
     float4(-0.5, -0.5, 1, 1),
     float4(0.5, -0.5, 1, 1),
-    float4(0, 0.5, 1, 1)
+    float4(0, 0.5, 1, 1),
+    float4(0.5, -0.5, 1, 1),
+    float4(0, 0.5, 1, 1),
+    float4(0.7, 0.7, 1, 1)
 };
 
 //color rgb
-constant float3 color[3] = {
+constant float3 color[6] = {
     float3(1, 0, 0),
     float3(0, 1, 0),
-    float3(0, 0, 1)
+    float3(0, 0, 1),
+    float3(0, 1, 0),
+    float3(0, 0, 1),
+    float3(0.5, 0.5, 0.5)
 };
 
 struct VertexOut {
