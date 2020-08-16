@@ -17,12 +17,14 @@ struct VertexOut {
 
 vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
                              device const float3 *colorBuffer [[buffer(1)]],
+                             constant float &timer [[buffer(2)]],
                              uint vertexId [[vertex_id]],
                              constant float4x4 &modelMatrix [[buffer(21)]]) {
     VertexOut result {
         .position = modelMatrix * positionBuffer[vertexId],
         .color = colorBuffer[vertexId]
     };
+    result.position.x += timer;
     return result;
 }
 

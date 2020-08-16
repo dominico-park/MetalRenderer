@@ -35,6 +35,7 @@ class Renderer: NSObject {
     ]
     let positionBuffer: MTLBuffer
     let colorBuffer: MTLBuffer
+    var timer: Float = 0
     
     init(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
@@ -87,11 +88,20 @@ extension Renderer: MTKViewDelegate {
             let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
                 return
         }
+        
+        timer += 0.05
+        var currentTime = sin(timer)
+        
         commandEncoder.setRenderPipelineState(pipelineState)
         
         //vertex buffer 를 gpu 에 전달
         commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
+        commandEncoder.setVertexBytes(
+            &currentTime,
+            length: MemoryLayout<Float>.stride,
+            index: 2
+        )
         
         var modelTransform = Transform()
         modelTransform.position = [0.5, 0, 0]
