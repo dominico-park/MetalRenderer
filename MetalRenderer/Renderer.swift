@@ -20,8 +20,6 @@ class Renderer: NSObject {
         float4(-0.5, -0.5, 1, 1),
         float4(0.5, -0.5, 1, 1),
         float4(0, 0.5, 1, 1),
-        float4(0.5, -0.5, 1, 1),
-        float4(0, 0.5, 1, 1),
         float4(0.7, 0.7, 1, 1)
     ]
     //color rgb
@@ -29,12 +27,16 @@ class Renderer: NSObject {
         float3(1, 0, 0),
         float3(0, 1, 0),
         float3(0, 0, 1),
-        float3(0, 1, 0),
-        float3(0, 0, 1),
         float3(0.5, 0.5, 0.5)
+    ]
+    
+    let indexArr: [UInt16] = [
+        0, 1, 2,
+        2, 1, 3
     ]
     let positionBuffer: MTLBuffer
     let colorBuffer: MTLBuffer
+    let indexBuffer: MTLBuffer
     var timer: Float = 0
     
     init(view: MTKView) {
@@ -52,6 +54,8 @@ class Renderer: NSObject {
         positionBuffer = device.makeBuffer(bytes: positionArr, length: positionLength, options: [])!
         let colorLength = MemoryLayout<float3>.stride * colorArr.count
         colorBuffer = device.makeBuffer(bytes: colorArr, length: colorLength, options: [])!
+        let indexLength = MemoryLayout<UInt16>.stride * indexArr.count
+        indexBuffer = device.makeBuffer(bytes: indexArr, length: indexLength, options: [])!
         
         super.init()
     }
@@ -114,7 +118,14 @@ extension Renderer: MTKViewDelegate {
             index: 21
         )
         
-        commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        //commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        commandEncoder.drawIndexedPrimitives(
+            type: .triangle,
+            indexCount: indexArr.count,
+            indexType: .uint16,
+            indexBuffer: indexBuffer,
+            indexBufferOffset: 0
+        )
         commandEncoder.endEncoding()
         
         commandBuffer.present(texture)
