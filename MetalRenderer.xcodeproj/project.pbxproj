@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		486F0B4224E1838000CD118C /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486F0B4124E1838000CD118C /* MathLibrary.swift */; };
 		486F0B4424E183F000CD118C /* Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486F0B4324E183F000CD118C /* Transform.swift */; };
+		48C312A524E8DBB9001983CD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C312A424E8DBB9001983CD /* Extensions.swift */; };
 		88FFE12124D6795B00484A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FFE12024D6795B00484A45 /* AppDelegate.swift */; };
 		88FFE12324D6795B00484A45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FFE12224D6795B00484A45 /* ViewController.swift */; };
 		88FFE12524D6795E00484A45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88FFE12424D6795E00484A45 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		486F0B4124E1838000CD118C /* MathLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathLibrary.swift; sourceTree = "<group>"; };
 		486F0B4324E183F000CD118C /* Transform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transform.swift; sourceTree = "<group>"; };
+		48C312A424E8DBB9001983CD /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		88FFE11D24D6795B00484A45 /* MetalRenderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalRenderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88FFE12024D6795B00484A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88FFE12224D6795B00484A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				88FFE13224D6918D00484A45 /* Shaders.metal */,
 				486F0B4124E1838000CD118C /* MathLibrary.swift */,
 				486F0B4324E183F000CD118C /* Transform.swift */,
+				48C312A424E8DBB9001983CD /* Extensions.swift */,
 			);
 			path = MetalRenderer;
 			sourceTree = "<group>";
@@ -151,6 +154,7 @@
 				88FFE12124D6795B00484A45 /* AppDelegate.swift in Sources */,
 				486F0B4424E183F000CD118C /* Transform.swift in Sources */,
 				486F0B4224E1838000CD118C /* MathLibrary.swift in Sources */,
+				48C312A524E8DBB9001983CD /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

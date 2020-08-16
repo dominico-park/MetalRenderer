@@ -16,11 +16,11 @@ class Renderer: NSObject {
     let commandQueue: MTLCommandQueue
     let pipelineState: MTLRenderPipelineState
     //position: x, y, z, w
-    let positionArr = [
-        float4(-0.5, -0.5, 1, 1),
-        float4(0.5, -0.5, 1, 1),
-        float4(0, 0.5, 1, 1),
-        float4(0.7, 0.7, 1, 1)
+    let positionArr: [float3] = [
+        float3(-0.5, -0.5, 1),
+        float3(0.5, -0.5, 1),
+        float3(0, 0.5, 1),
+        float3(0.7, 0.7, 1)
     ]
     //color rgb
     let colorArr = [
@@ -73,6 +73,7 @@ class Renderer: NSObject {
         let fragmentFunc = Renderer.library.makeFunction(name: "fragment_main")
         pipelineStateDescriptor.vertexFunction = vertexFunc
         pipelineStateDescriptor.fragmentFunction = fragmentFunc
+        pipelineStateDescriptor.vertexDescriptor = MTLVertexDescriptor.defaultVertexDescriptor()
         
         return try! Renderer.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }

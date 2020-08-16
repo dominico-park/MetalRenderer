@@ -9,20 +9,22 @@
 #include <metal_stdlib>
 using namespace metal;
 
+struct VertexIn {
+    float4 position [[attribute(0)]];
+    float3 color [[attribute(1)]];
+};
 
 struct VertexOut {
     float4 position [[position]];
     float3 color;
 };
 
-vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
-                             device const float3 *colorBuffer [[buffer(1)]],
+vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]],
                              constant float &timer [[buffer(2)]],
-                             uint vertexId [[vertex_id]],
                              constant float4x4 &modelMatrix [[buffer(21)]]) {
     VertexOut result {
-        .position = modelMatrix * positionBuffer[vertexId],
-        .color = colorBuffer[vertexId]
+        .position = modelMatrix * vertexBuffer.position,
+        .color = vertexBuffer.color
     };
     result.position.x += timer;
     return result;
