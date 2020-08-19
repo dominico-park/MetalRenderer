@@ -15,6 +15,7 @@ class Renderer: NSObject {
     static var library: MTLLibrary!
     let commandQueue: MTLCommandQueue
     let pipelineState: MTLRenderPipelineState
+    let depthStencilState: MTLDepthStencilState
 //    let vertices: [Vertex] = [
 //        Vertex(position: float3(-0.5, -0.5, 1), color: float3(1, 0, 0)),
 //        Vertex(position: float3(0.5, -0.5, 1), color: float3(0, 1, 0)),
@@ -41,7 +42,9 @@ class Renderer: NSObject {
         Renderer.library = device.makeDefaultLibrary()
         self.commandQueue = commandQueue
         self.pipelineState = Renderer.makePipelineState()
+        depthStencilState = Renderer.makeDepthStencilState()
         
+        view.depthStencilPixelFormat = .depth32Float
         //cpu 에서 vertex buffer를 만들기
 //        let vertexLength = MemoryLayout<Vertex>.stride * vertices.count
 //        vertexBuffer = device.makeBuffer(bytes: vertices, length: vertexLength, options: [])!
@@ -55,6 +58,13 @@ class Renderer: NSObject {
         train.transform.scale = 0.5
         
         super.init()
+    }
+    
+    static func makeDepthStencilState() -> MTLDepthStencilState {
+        let depthDescriptor = MTLDepthStencilDescriptor()
+        depthDescriptor.depthCompareFunction = .less
+        depthDescriptor.isDepthWriteEnabled = true
+        return Renderer.device.makeDepthStencilState(descriptor: depthDescriptor)!
     }
     
     static func makePipelineState() -> MTLRenderPipelineState {
@@ -71,7 +81,7 @@ class Renderer: NSObject {
         pipelineStateDescriptor.vertexFunction = vertexFunc
         pipelineStateDescriptor.fragmentFunction = fragmentFunc
         pipelineStateDescriptor.vertexDescriptor = MTLVertexDescriptor.defaultVertexDescriptor()
-        
+        pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float
         return try! Renderer.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
 }
@@ -102,7 +112,7 @@ extension Renderer: MTKViewDelegate {
         var currentTime = sin(timer)
         
         commandEncoder.setRenderPipelineState(pipelineState)
-        
+        commandEncoder.setDepthStencilState(depthStencilState)
         commandEncoder.setVertexBytes(
             &currentTime,
             length: MemoryLayout<Float>.stride,
