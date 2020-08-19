@@ -13,6 +13,7 @@ class Model {
     
     var mdlMeshes: [MDLMesh]
     var mtkMeshes: [MTKMesh]
+    var transform = Transform()
     
     init(name: String) {
         

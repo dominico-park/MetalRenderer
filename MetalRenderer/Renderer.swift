@@ -51,6 +51,8 @@ class Renderer: NSObject {
         
         //import model
         self.train = Model(name: "train")
+        self.train.transform.position = [0.4, 0, 0]
+        train.transform.scale = 0.5
         
         super.init()
     }
@@ -89,6 +91,13 @@ extension Renderer: MTKViewDelegate {
                 return
         }
         
+        let projectionMatrix = float4x4(
+            projectionFov: radians(fromDegrees: 65),
+            near: 0.1,
+            far: 100,
+            aspect: Float(view.bounds.width / view.bounds.height)
+        )
+        
         timer += 0.05
         var currentTime = sin(timer)
         
@@ -100,13 +109,18 @@ extension Renderer: MTKViewDelegate {
             index: 2
         )
         
-        var modelTransform = Transform()
-        modelTransform.position = [0.5, 0, 0]
-        modelTransform.rotation.z = radians(fromDegrees: 45)
-        modelTransform.scale = 0.5
-        var modelMatrix = modelTransform.matrix
+//        var modelTransform = Transform()
+//        modelTransform.position = [0.5, 0, 0]
+//        modelTransform.rotation.z = radians(fromDegrees: 45)
+//        modelTransform.scale = 0.5
+//        var modelMatrix = modelTransform.matrix
+        var viewTransform = Transform()
+        viewTransform.position.y = 1.0
+        viewTransform.position.z = -2
+        var viewMatrix = projectionMatrix * viewTransform.matrix.inverse
+        
         commandEncoder.setVertexBytes(
-            &modelMatrix,
+            &viewMatrix,
             length: MemoryLayout<float4x4>.stride,
             index: 21
         )
