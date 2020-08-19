@@ -16,22 +16,11 @@ class Renderer: NSObject {
     let commandQueue: MTLCommandQueue
     let pipelineState: MTLRenderPipelineState
     let depthStencilState: MTLDepthStencilState
-//    let vertices: [Vertex] = [
-//        Vertex(position: float3(-0.5, -0.5, 1), color: float3(1, 0, 0)),
-//        Vertex(position: float3(0.5, -0.5, 1), color: float3(0, 1, 0)),
-//        Vertex(position: float3(0, 0.5, 1), color: float3(0, 0, 1)),
-//        Vertex(position: float3(0.7, 0.7, 1), color: float3(0.5, 0.5, 0.5)),
-//    ]
-//
-//    let indexArr: [UInt16] = [
-//        0, 1, 2,
-//        2, 1, 3
-//    ]
-//    let vertexBuffer: MTLBuffer
-//    let indexBuffer: MTLBuffer
+
     var timer: Float = 0
-    
+    let camera: Camera = Camera()
     let train: Model
+    var uniforms = Uniforms()
     
     init(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
@@ -45,17 +34,11 @@ class Renderer: NSObject {
         depthStencilState = Renderer.makeDepthStencilState()
         
         view.depthStencilPixelFormat = .depth32Float
-        //cpu 에서 vertex buffer를 만들기
-//        let vertexLength = MemoryLayout<Vertex>.stride * vertices.count
-//        vertexBuffer = device.makeBuffer(bytes: vertices, length: vertexLength, options: [])!
-//
-//        let indexLength = MemoryLayout<UInt16>.stride * indexArr.count
-//        indexBuffer = device.makeBuffer(bytes: indexArr, length: indexLength, options: [])!
-        
-        //import model
+ 
         self.train = Model(name: "train")
         self.train.transform.position = [0.4, 0, 0]
         train.transform.scale = 0.5
+        camera.transform.position = [0, 1.0, -2]
         
         super.init()
     }
@@ -89,7 +72,7 @@ class Renderer: NSObject {
 extension Renderer: MTKViewDelegate {
     //metalview size changed
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        print("metalview size changed")
+        camera.aspect = Float(view.bounds.width / view.bounds.height)
     }
     
     //each frame draw
@@ -101,12 +84,9 @@ extension Renderer: MTKViewDelegate {
                 return
         }
         
-        let projectionMatrix = float4x4(
-            projectionFov: radians(fromDegrees: 65),
-            near: 0.1,
-            far: 100,
-            aspect: Float(view.bounds.width / view.bounds.height)
-        )
+        uniforms.viewMatrix = camera.viewMatrix
+        uniforms.projectionMatrix = camera.projectionMatrix
+        uniforms.modelMatrix = train.transform.matrix
         
         timer += 0.05
         var currentTime = sin(timer)
@@ -119,19 +99,9 @@ extension Renderer: MTKViewDelegate {
             index: 2
         )
         
-//        var modelTransform = Transform()
-//        modelTransform.position = [0.5, 0, 0]
-//        modelTransform.rotation.z = radians(fromDegrees: 45)
-//        modelTransform.scale = 0.5
-//        var modelMatrix = modelTransform.matrix
-        var viewTransform = Transform()
-        viewTransform.position.y = 1.0
-        viewTransform.position.z = -2
-        var viewMatrix = projectionMatrix * viewTransform.matrix.inverse
-        
         commandEncoder.setVertexBytes(
-            &viewMatrix,
-            length: MemoryLayout<float4x4>.stride,
+            &uniforms,
+            length: MemoryLayout<Uniforms>.stride,
             index: 21
         )
         
