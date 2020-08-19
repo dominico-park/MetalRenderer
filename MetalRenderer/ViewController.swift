@@ -20,6 +20,9 @@ class ViewController: NSViewController {
         metalView.delegate = renderer
         metalView.clearColor = MTLClearColor(red: 1, green: 1, blue: 0.8, alpha: 1)
     }
-
+    
+    override func scrollWheel(with event: NSEvent) {
+        renderer?.zoom(delta: Float(event.deltaY))
+    }
 }
 

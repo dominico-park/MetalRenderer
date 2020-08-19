@@ -67,6 +67,12 @@ class Renderer: NSObject {
         pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float
         return try! Renderer.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
+    
+    func zoom(delta: Float) {
+        let sensitivity: Float = 0.05
+        let cameraVector = camera.transform.matrix.upperLeft.columns.2
+        camera.transform.position += delta * sensitivity * cameraVector
+    }
 }
 
 extension Renderer: MTKViewDelegate {
