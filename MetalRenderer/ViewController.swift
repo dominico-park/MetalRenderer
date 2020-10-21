@@ -21,8 +21,9 @@ class ViewController: NSViewController {
         metalView.clearColor = MTLClearColor(red: 1, green: 1, blue: 0.8, alpha: 1)
     }
     
-    override func scrollWheel(with event: NSEvent) {
-        renderer?.zoom(delta: Float(event.deltaY))
+    override func touchesBegan(with event: NSEvent) {
+        print(Float(event.deltaX))
+        renderer?.move(delta: Float(event.deltaX))
     }
 }
 

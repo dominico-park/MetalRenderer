@@ -73,6 +73,10 @@ class Renderer: NSObject {
         let cameraVector = camera.transform.matrix.upperLeft.columns.2
         camera.transform.position += delta * sensitivity * cameraVector
     }
+    
+    func move(delta: Float) {
+        train.transform.position.x += delta
+    }
 }
 
 extension Renderer: MTKViewDelegate {
@@ -94,7 +98,7 @@ extension Renderer: MTKViewDelegate {
         uniforms.projectionMatrix = camera.projectionMatrix
         uniforms.modelMatrix = train.transform.matrix
         
-        timer += 0.05
+        //timer += 0.05
         var currentTime = sin(timer)
         
         commandEncoder.setRenderPipelineState(pipelineState)
